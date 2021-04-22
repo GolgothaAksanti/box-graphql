@@ -1,30 +1,25 @@
-const users = {
-  1: {
-    id: '1',
-    username: 'Altare Aksanti',
-    messageIds: [1],
+import Sequelize from 'sequelize';
+
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: process.env.DATABASE_DIALECT,
   },
-  2: {
-    id: '2',
-    username: 'Mapendo Celestin',
-    messageId: [2],
-  },
+);
+
+const models = {
+  User: sequelize.import('./user'),
+  Message: sequelize.import('./message'),
 };
 
-const messages = {
-  1: {
-    id: '1',
-    text: 'Hello World',
-    userId: '1',
-  },
-  2: {
-    id: '2',
-    text: 'By Wolrd',
-    userId: '2',
-  },
-};
+Object.keys(models).forEach((key) => {
+  if ('associate' in models[key]) {
+    models[key].associate = models[key].associate(models);
+  }
+});
 
-export default {
-  users,
-  messages,
-};
+export { sequelize };
+
+export default models;
