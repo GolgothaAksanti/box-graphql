@@ -1,34 +1,18 @@
 import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
 
-import schema from './schema';
-import resolvers from './resolvers';
-import models, { sequelize } from './models';
+import server from './api';
 
-const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-
-const server = new ApolloServer({
-  typeDefs: schema,
-  resolvers,
-  context: {
-    models,
-    me: models.users[1],
-  },
+process.on('uncaughtException', (err) => {
+  console.error(`${(new Date()).toUTCString()} uncaughtException: `, err);
+  process.exit(0);
 });
 
-server.applyMiddleware({
-  app,
-  path: '/graphql',
+process.on('unhandledRejection', (err) => {
+  console.error(`${(new Date()).toUTCString()} uncaughtRejection: `, err);
 });
 
-sequelize.sync().then(async () => {
-  app.listen({ port: 8000 }, () => {
-    process.stdout.write(
-      'Apollo server listening on: http://localhost:8000/graphql',
-    );
-  });
+server.listen({ PORT }, () => {
+  process.stdout.write(`Server ready at: http://localhost:${PORT}/graphql`);
 });
