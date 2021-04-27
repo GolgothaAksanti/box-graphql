@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
-// import userSchema from './user';
-// import messageSchema from './message';
+import userType from './user';
+import messageType from './message';
 
 const rootType = gql`
   type Query {
@@ -17,4 +17,4 @@ const rootType = gql`
   }
 `;
 
-export default [rootType];
+export default [rootType, userType, messageType];
