@@ -1,26 +1,10 @@
-export default {
-  Query: {
-    users: async (parent, args, { models }) => {
-      const res = await models.User.findAll();
-      return res;
-    },
-    user: async (parent, { id }, { models }) => {
-      const res = await models.User.findByPk(id);
-      return res;
-    },
-    me: async (parent, args, { models, me }) => {
-      const res = await models.User.findByPk(me.id);
-      return res;
-    },
-  },
+import db from '../../database/models';
 
-  User: {
-    messages: async (user, args, { models }) => {
-      const res = await models.Message.findAll({
-        where: {
-          userId: user.id,
-        },
-      });
+module.exports = {
+  Mutation: {
+    async register(root, args, context) {
+      const { username, email, password } = args.input;
+      const res = await db.User.create({ username, email, password });
       return res;
     },
   },

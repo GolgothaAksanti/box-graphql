@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate(async (user) => {
     user.password = await user.generatePasswordHash();
   });
-  User.prototype.generatePasswordHash = () => {
+  User.prototype.generatePasswordHash = function () {
     if (this.password) {
       return bcrypt.hash(this.password, 10);
     }
