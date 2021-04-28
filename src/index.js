@@ -13,6 +13,6 @@ process.on('unhandledRejection', (err) => {
   console.error(`${(new Date()).toUTCString()} uncaughtRejection: `, err);
 });
 
-server.listen({ PORT }, () => {
-  process.stdout.write(`Server ready at: http://localhost:${PORT}/graphql`);
+server.listen({ port: PORT }, () => {
+  process.stdout.write(`Server ready at: http://localhost:${PORT}/api/v1`);
 });

@@ -3,7 +3,7 @@ import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import { createServer } from 'http';
 
-import typDefs from '../graphql/schemas';
+import typeDefs from '../graphql/schema';
 import resolvers from '../graphql/resolvers';
 import context from '../graphql/context';
 
@@ -14,13 +14,13 @@ app.use(cors());
 const apiVersion = '/api/v1';
 
 const apolloServer = new ApolloServer({
-  typDefs,
+  typeDefs,
   resolvers,
   context,
   introspection: true,
   playground: {
     settings: {
-      'schema.polling.enable.enable': false,
+      'schema.polling.enable': false,
     },
   },
 });
