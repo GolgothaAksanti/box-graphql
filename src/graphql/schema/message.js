@@ -4,23 +4,18 @@ export default gql`
   type Message {
     messageId: Int!
     text: String!
-    userId: User!
+    userId: Int!
   }
 
-#   extend type Query {
-#       getAllMessages: [Message!]
-#       getSingleMessage: (messageId: Int!): Message
-#   }
+  extend type Query {
+      getAllMessages: [Message!]
+      # getSingleMessage: (messageId: Int!): Message
+  }
 
   extend type Mutation {
     createMessage(text: String!): CreateMessageResponse
     # deleteMessage(messageId: Int!): Boolean!
   }
-
-  # input MessageInput {
-  #     text: String!
-  #     userId: Int!
-  # }
 
   type CreateMessageResponse {
     messageId: Int!

@@ -47,11 +47,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  User.findByLogin = async (a, b) => {
-    let user = await User.findOne({ where: { username: a } });
+  User.findByLogin = async (login) => {
+    let user = await User.findOne({ where: { username: login } });
 
     if (!user) {
-      user = await User.findOne({ where: { email: b } });
+      user = await User.findOne({ where: { email: login } });
     }
 
     return user;
