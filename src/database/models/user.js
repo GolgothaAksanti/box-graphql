@@ -74,8 +74,11 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.associate = (models) => {
-    User.hasMany(models.Message, { foreignKey: 'userId', as: 'messages' });
+    User.hasOne(models.Message, {
+      foreignKey: 'userId',
+      onDelete: 'RESTRICT',
+      onUpdate: 'CASCADE',
+    });
   };
-
   return User;
 };

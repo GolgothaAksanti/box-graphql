@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, UserInputError } from 'apollo-server';

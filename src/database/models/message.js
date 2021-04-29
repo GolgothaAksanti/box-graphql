@@ -17,13 +17,18 @@ module.exports = (sequelize, Sequelize) => {
       },
     },
     {
-      tableName: 'Message',
+      freezeTableName: true,
+      tableName: 'Messages',
     },
   );
 
-  Message.associate = (models) => {
-    Message.belongsTo(models.User, { foreignKey: 'userId', as: 'author' });
+  Message.findByText = async (text) => {
+    const message = await Message.findOne({ where: { text } });
+    return message;
   };
 
+  Message.associate = (models) => {
+    Message.belongsTo(models.User, { foreignKey: 'userId' });
+  };
   return Message;
 };

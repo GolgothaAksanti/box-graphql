@@ -2,10 +2,11 @@ import { gql } from 'apollo-server-express';
 
 module.exports = gql`
   type User {
-    userId: Int!
+    userId: ID!
     username: String!
     email: String!
     password: String!
+    messages: [Message!]
   }
 
   extend type Mutation {
@@ -14,14 +15,14 @@ module.exports = gql`
   }
 
   type RegisterResponse {
-    userId: Int!
+    userId: ID!
     username: String!
     email: String!
     token: String!
   }
 
   type LoginResponse {
-    userId: Int!
+    userId: ID!
     username: String!
     email: String!
     token: String!
