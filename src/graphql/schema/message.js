@@ -8,8 +8,8 @@ export default gql`
   }
 
   extend type Query {
-      getAllMessages: [Message!]
-      # getSingleMessage: (messageId: Int!): Message
+    getAllMessages: [Message!]
+    getSingleMessage(messageId: Int!): Message
   }
 
   extend type Mutation {
