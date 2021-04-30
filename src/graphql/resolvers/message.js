@@ -2,13 +2,13 @@
 import { AuthenticationError } from 'apollo-server-express';
 import { combineResolvers } from 'graphql-resolvers';
 
-import isAuthenticated from './authorization';
+import auth from './authorization';
 import db from '../../database/models';
 
 module.exports = {
   Mutation: {
     createMessage: combineResolvers(
-      isAuthenticated,
+      auth.isAuthenticated,
       async (_, { text }, { user = null }) => {
         const isExist = await db.Message.findByText(text);
 
@@ -24,6 +24,15 @@ module.exports = {
         return res;
       },
     ),
+
+    // deleteMessage: combineResolvers(
+    //   auth.isAuthenticated,
+    //   async (parent, { messageId }) => {
+    //     const res = await db.Message.destroy({ where: { messageId } });
+
+    //     return res;
+    //   },
+    // ),
   },
 
   Query: {
@@ -32,15 +41,14 @@ module.exports = {
       return res;
     },
 
-    // getSingleMessage: async (_, { messageId }, content) => {
-    //   const res = await db.Message.findOne({ where: { messageId } });
-    //   return res;
-    // },
+    getSingleMessage: combineResolvers(
+      auth.isAuthenticated,
+      async (_, { messageId }, { user = null }, content) => {
+        const res = await db.Message.findOne({ where: { messageId } });
+
+        return res;
+      },
+    ),
   },
 
-  // Message: {
-  //   author(message) {
-  //     return message.userId;
-  //   },
-  // },
 };
