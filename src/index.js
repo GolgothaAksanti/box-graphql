@@ -1,18 +1,5 @@
-import 'dotenv/config';
+import server, { onPort } from './api';
 
-import server from './api';
-
-const port = process.env.PORT || 3000;
-
-process.on('uncaughtException', (err) => {
-  console.error(`${new Date().toUTCString()} uncaughtException: `, err);
-  process.exit(0);
-});
-
-process.on('unhandledRejection', (err) => {
-  console.error(`${new Date().toUTCString()} uncaughtRejection: `, err);
-});
-
-server.listen({ port }, () => {
-  process.stdout.write(`Server ready at: http://localhost:${port}/api/v1`);
+server.listen({ port: onPort }, () => {
+  process.stdout.write(`Server ready at: http://localhost:${onPort}/api/v1`);
 });

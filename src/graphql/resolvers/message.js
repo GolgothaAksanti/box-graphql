@@ -25,14 +25,19 @@ module.exports = {
       },
     ),
 
-    // deleteMessage: combineResolvers(
-    //   auth.isAuthenticated,
-    //   async (parent, { messageId }) => {
-    //     const res = await db.Message.destroy({ where: { messageId } });
+    deleteMessage: combineResolvers(
+      auth.isAuthenticated,
+      async (parent, { messageId }, { user = null }) => {
+        const message = await db.Message.findOne({ where: { messageId } });
 
-    //     return res;
-    //   },
-    // ),
+        if (message.userId !== user.userId) {
+          throw new AuthenticationError('Not authenticated as owner');
+        }
+
+        const res = await db.Message.destroy({ where: { messageId } });
+        return res;
+      },
+    ),
   },
 
   Query: {
@@ -50,5 +55,4 @@ module.exports = {
       },
     ),
   },
-
 };

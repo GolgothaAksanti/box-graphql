@@ -10,8 +10,8 @@ module.exports = gql`
   }
 
   extend type Mutation {
-    register(input: RegisterInput!): RegisterResponse
-    login(input: LoginInput!): LoginResponse
+    register(input: RegisterInput!): Token!
+    login(input: LoginInput!): Token!
   }
 
   type RegisterResponse {
@@ -25,6 +25,10 @@ module.exports = gql`
     userId: ID!
     username: String!
     email: String!
+    token: String!
+  }
+
+  type Token {
     token: String!
   }
 

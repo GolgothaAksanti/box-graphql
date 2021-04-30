@@ -9,7 +9,9 @@ module.exports = {
     register: async (root, args, context) => {
       const { username, email, password } = args.input;
 
-      const isExist = await db.User.findByLogin(username, email);
+      const login = username || email;
+
+      const isExist = await db.User.findByLogin(login);
 
       if (isExist) {
         throw new AuthenticationError('user already exists');

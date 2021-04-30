@@ -14,7 +14,7 @@ export default gql`
 
   extend type Mutation {
     createMessage(text: String!): CreateMessageResponse
-    # deleteMessage(messageId: Int!): Boolean!
+    deleteMessage(messageId: Int!): Boolean!
   }
 
   type CreateMessageResponse {
