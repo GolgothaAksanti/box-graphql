@@ -1,19 +1,8 @@
-import 'dotenv/config';
-import jwt from 'jsonwebtoken';
+/* eslint-disable no-unused-vars */
 import { AuthenticationError, UserInputError } from 'apollo-server';
 
 import db from '../../database/models';
-
-const createToken = async (user, expiresIn) => {
-  const secret = process.env.SECRET_KEY;
-
-  const { userId, email, username } = user;
-
-  const res = await jwt.sign({ userId, email, username }, secret, {
-    expiresIn,
-  });
-  return res;
-};
+import JWT from '../../helpers/tokenUtils';
 
 module.exports = {
   Mutation: {
@@ -28,15 +17,15 @@ module.exports = {
 
       const user = await db.User.create({ username, email, password });
 
-      const token = await createToken(user, '24h');
+      const token = await JWT.createToken(user, '24h');
 
       return { ...user.toJSON(), token };
     },
 
     login: async (root, { input }, content) => {
-      const { email, username, password } = input;
+      const { login, password } = input;
 
-      const user = await db.User.findByLogin(username, email);
+      const user = await db.User.findByLogin(login);
 
       if (!user) {
         throw new UserInputError('No User found with this login credentials');
@@ -48,7 +37,7 @@ module.exports = {
         throw new AuthenticationError('invalid Password');
       }
 
-      const token = await createToken(user, '24h');
+      const token = await JWT.createToken(user, '24h');
       return { ...user.toJSON(), token };
     },
   },

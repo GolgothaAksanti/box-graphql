@@ -1,2 +1,7 @@
-// eslint-disable-next-line no-unused-vars
-module.export = ({ req }) => {};
+import JWT from '../../helpers/tokenUtils';
+
+module.exports = async ({ req }) => {
+  const token = (req.headers && req.headers.authorization) || '';
+  const user = await JWT.verifyToken(token);
+  return { user };
+};

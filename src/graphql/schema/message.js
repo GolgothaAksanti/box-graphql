@@ -1,25 +1,25 @@
 import { gql } from 'apollo-server-express';
 
 export default gql`
-    extend type Query {
-        getAllMessages: [Message!]
-        getSingleMessage: (messageId: Int!): Message
-    }
+  type Message {
+    messageId: Int!
+    text: String!
+    userId: Int!
+  }
 
-    extend type Mutation {
-        createMessage(text: String!): MessageResponse
-        deleteMessage(messageId: Int!): Boolean!
-    }
+  extend type Query {
+      getAllMessages: [Message!]
+      # getSingleMessage: (messageId: Int!): Message
+  }
 
-    type Message {
-        messageId: Int!
-        text: String!
-        author: User!
-    }
+  extend type Mutation {
+    createMessage(text: String!): CreateMessageResponse
+    # deleteMessage(messageId: Int!): Boolean!
+  }
 
-    type MessageResponse {
-        messageId: Int!
-        userId: Int!
-        text: String!
-    }
+  type CreateMessageResponse {
+    messageId: Int!
+    userId: Int!
+    text: String!
+  }
 `;

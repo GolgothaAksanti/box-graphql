@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 import userType from './user';
+import messageType from './message';
 
 const rootType = gql`
   type Query {
@@ -12,4 +13,4 @@ const rootType = gql`
   }
 `;
 
-module.exports = [rootType, userType];
+module.exports = [rootType, userType, messageType];
