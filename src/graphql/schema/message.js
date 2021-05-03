@@ -5,7 +5,7 @@ export default gql`
     messageId: Int!
     text: String!
     userId: Int!
-    createdAt: String
+    createdAt: Date!
   }
 
   extend type Query {
