@@ -17,6 +17,10 @@ module.exports = (sequelize, Sequelize) => {
           notEmpty: true,
         },
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
     },
     {
       freezeTableName: true,

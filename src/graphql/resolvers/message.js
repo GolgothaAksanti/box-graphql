@@ -7,6 +7,16 @@ import db from '../../database/models';
 
 module.exports = {
   Mutation: {
+    /**
+     * createmessage
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} _
+     * @param {*} text
+     * @param {*} user
+     * @returns {Promise}
+     */
     createMessage: combineResolvers(
       auth.isAuthenticated,
       async (_, { text }, { user = null }) => {
@@ -25,6 +35,16 @@ module.exports = {
       },
     ),
 
+    /**
+     * deleteMessage
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} parent
+     * @param {*} messageId
+     * @param {*} user
+     * @returns {boolean}
+     */
     deleteMessage: combineResolvers(
       auth.isAuthenticated,
       auth.isMessageOwner,
@@ -37,11 +57,28 @@ module.exports = {
   },
 
   Query: {
+    /**
+     *
+     * @param {*} root
+     * @param {*} args
+     * @param {*} content
+     * @returns {Object} message object with array inside
+     */
     getAllMessages: async (root, args, content) => {
       const res = await db.Message.findAll();
       return res;
     },
 
+    /**
+     * getSingleMessage
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} messageId
+     * @param {*} user
+     * @param {*} content
+     * @returns {Object} message object
+     */
     getSingleMessage: combineResolvers(
       auth.isAuthenticated,
       async (_, { messageId }, { user = null }, content) => {

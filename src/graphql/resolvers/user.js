@@ -8,8 +8,21 @@ import auth from './authorization';
 
 module.exports = {
   Mutation: {
+    /**
+     * register a new user
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} root
+     * @param {*} args
+     * @param {*} context
+     * @returns {token}
+     */
+
     register: async (root, args, context) => {
-      const { username, email, password, role } = args.input;
+      const {
+        username, email, password, role
+      } = args.input;
 
       const login = username || email;
 
@@ -31,6 +44,17 @@ module.exports = {
       return { ...user.toJSON(), token };
     },
 
+    /**
+     * login
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} root
+     * @param {*} input
+     * @param {*} content
+     * @returns {token}
+     */
+
     login: async (root, { input }, content) => {
       const { login, password } = input;
 
@@ -50,10 +74,32 @@ module.exports = {
       return { ...user.toJSON(), token };
     },
 
+    /**
+     * getAllUsers
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} root
+     * @param {*} args
+     * @param {*} content
+     * @returns {object} object with users array
+     */
+
     getAllUsers: combineResolvers(auth.isAdmin, async (root, args, content) => {
       const res = await db.User.findAll();
       return res;
     }),
+
+    /**
+     * getSingleUser
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} root
+     * @param {*} {userId}
+     * @param {*} content
+     * @returns {Promise} user object
+     */
 
     getSingleUser: combineResolvers(
       auth.isAdmin,
@@ -64,13 +110,25 @@ module.exports = {
       },
     ),
 
-    // deleteUser: combineResolvers(
-    //   auth.isAdmin,
-    //   async (parent, { userId }, { user = null }, content) => {
-    //     const res = await db.User.destroy({ where: { userId } });
+    /**
+     * deleteUser
+     * @author Golgotha Aksanti
+     * @since 1.0.0
+     *
+     * @param {*} parent
+     * @param {*} userId
+     * @param {*} user
+     * @param {*} content
+     * @returns {Boolean}
+     */
 
-    //     return res;
-    //   },
-    // ),
+    deleteUser: combineResolvers(
+      auth.isAdmin,
+      async (parent, { userId }, { user = null }, content) => {
+        const res = await db.User.destroy({ where: { userId } });
+
+        return res;
+      },
+    ),
   },
 };
