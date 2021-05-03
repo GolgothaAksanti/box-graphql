@@ -33,4 +33,12 @@ export default gql`
     hasNextPage: Boolean!
     endCursor: String!
   }
+
+  extend type Subscription {
+    messageCreated: MessageCreated!
+  }
+
+  type MessageCreated {
+    message: Message!
+  }
 `;
