@@ -34,6 +34,9 @@ module.exports = (sequelize, DataTypes) => {
           len: [7, 47],
         },
       },
+      role: {
+        type: DataTypes.STRING,
+      }
     },
     {
       defaultScope: {

@@ -27,14 +27,10 @@ module.exports = {
 
     deleteMessage: combineResolvers(
       auth.isAuthenticated,
+      auth.isMessageOwner,
       async (parent, { messageId }, { user = null }) => {
-        const message = await db.Message.findOne({ where: { messageId } });
-
-        if (message.userId !== user.userId) {
-          throw new AuthenticationError('Not authenticated as owner');
-        }
-
         const res = await db.Message.destroy({ where: { messageId } });
+
         return res;
       },
     ),

@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import { createServer } from 'http';
 import fs from 'fs';
 
-import port from '../helpers/portUtil';
+import port from '../helpers/utils/portUtil';
 import typeDefs from '../graphql/schema';
 import resolvers from '../graphql/resolvers';
 import context from '../graphql/context';

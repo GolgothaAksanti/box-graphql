@@ -2,16 +2,27 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { AuthenticationError } from 'apollo-server-express';
 
-import db from '../database/models';
+import db from '../../database/models';
 
 const createToken = async (user, expiresIn) => {
   const secret = process.env.SECRET_KEY;
 
-  const { userId, email, username } = user;
+  const {
+    userId, email, username, role
+  } = user;
 
-  const res = await jwt.sign({ userId, email, username }, secret, {
-    expiresIn,
-  });
+  const res = await jwt.sign(
+    {
+      userId,
+      email,
+      username,
+      role,
+    },
+    secret,
+    {
+      expiresIn,
+    },
+  );
   return res;
 };
 

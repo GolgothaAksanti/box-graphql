@@ -6,12 +6,15 @@ module.exports = gql`
     username: String!
     email: String!
     password: String!
+    role: String
     messages: [Message!]
   }
 
   extend type Mutation {
     register(input: RegisterInput!): Token!
     login(input: LoginInput!): Token!
+    getAllUsers: [User!]
+    # deleteUser(userId: ID!): Boolean!
   }
 
   type RegisterResponse {
@@ -36,6 +39,7 @@ module.exports = gql`
     email: String!
     username: String!
     password: String!
+    role: String
   }
 
   input LoginInput {
