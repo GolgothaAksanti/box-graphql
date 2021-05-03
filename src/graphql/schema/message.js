@@ -9,8 +9,8 @@ export default gql`
   }
 
   extend type Query {
-    getAllMessages: [Message!]
-    getSingleMessage(messageId: Int!): Message
+    getAllMessages(cursor: String, limit: Int): MessageConnection!
+    getSingleMessage(messageId: Int!): Message!
   }
 
   extend type Mutation {
@@ -22,5 +22,15 @@ export default gql`
     messageId: Int!
     userId: Int!
     text: String!
+  }
+
+  type MessageConnection {
+    edges: [Message!]!
+    pageInfo: PageInfo!
+  }
+   
+  type PageInfo {
+    hasNextPage: Boolean!
+    endCursor: String!
   }
 `;

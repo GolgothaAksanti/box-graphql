@@ -1,9 +1,14 @@
 /* eslint-disable no-unused-vars */
 import { AuthenticationError } from 'apollo-server-express';
 import { combineResolvers } from 'graphql-resolvers';
+import { Op } from 'sequelize';
 
 import auth from './authorization';
 import db from '../../database/models';
+
+const toCursorHash = (string) => Buffer.from(string).toString('base64');
+
+const fromCursorHash = (string) => Buffer.from(string, 'base64').toString('ascii');
 
 module.exports = {
   Mutation: {
@@ -59,13 +64,38 @@ module.exports = {
   Query: {
     /**
      *
-     * @param {*} root
-     * @param {*} args
+     * @param {*} _
      * @param {*} content
      * @returns {Object} message object with array inside
      */
-    getAllMessages: async (root, args, content) => {
-      const res = await db.Message.findAll();
+    getAllMessages: async (_, { cursor, limit }, content) => {
+      const cursorOptions = cursor
+        ? {
+          where: {
+            createdAt: {
+              [Op.lt]: fromCursorHash(cursor),
+            },
+          },
+        }
+        : {};
+
+      const messages = await db.Message.findAll({
+        order: [['createdAt', 'DESC']],
+        limit: limit + 1,
+        ...cursorOptions,
+      });
+
+      const hasNextPage = messages.length > limit;
+      const edges = hasNextPage ? messages.slice(0, -1) : messages;
+
+      const res = {
+        edges,
+        pageInfo: {
+          hasNextPage,
+          endCursor: toCursorHash(edges[edges.length - 1].createdAt),
+        }
+      };
+
       return res;
     },
 
