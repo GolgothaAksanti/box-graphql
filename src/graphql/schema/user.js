@@ -14,6 +14,7 @@ module.exports = gql`
     register(input: RegisterInput!): Token!
     login(input: LoginInput!): Token!
     getAllUsers: [User!]
+    getSingleUser(userId: ID!): User
     # deleteUser(userId: ID!): Boolean!
   }
 

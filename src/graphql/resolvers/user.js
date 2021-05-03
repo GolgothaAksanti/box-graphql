@@ -9,9 +9,7 @@ import auth from './authorization';
 module.exports = {
   Mutation: {
     register: async (root, args, context) => {
-      const {
-        username, email, password, role
-      } = args.input;
+      const { username, email, password, role } = args.input;
 
       const login = username || email;
 
@@ -57,10 +55,22 @@ module.exports = {
       return res;
     }),
 
-    // deleteUser: combineResolvers(auth.IsAdmin, async (parent, { userId }) => {
-    //   const res = await db.User.destroy({ where: { userId } });
+    getSingleUser: combineResolvers(
+      auth.isAdmin,
+      async (root, { userId }, content) => {
+        const res = await db.User.findOne({ where: { userId } });
 
-    //   return res;
-    // }),
+        return res;
+      },
+    ),
+
+    // deleteUser: combineResolvers(
+    //   auth.isAdmin,
+    //   async (parent, { userId }, { user = null }, content) => {
+    //     const res = await db.User.destroy({ where: { userId } });
+
+    //     return res;
+    //   },
+    // ),
   },
 };
