@@ -7,6 +7,7 @@ module.exports = gql`
     email: String!
     password: String!
     role: String
+    createdAt: Date!
     messages: [Message!]
   }
 
