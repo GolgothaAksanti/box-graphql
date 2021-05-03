@@ -1,4 +1,4 @@
-import JWT from '../../helpers/tokenUtils';
+import JWT from '../../helpers/utils/tokenUtils';
 
 module.exports = async ({ req }) => {
   const token = (req.headers && req.headers.authorization) || '';

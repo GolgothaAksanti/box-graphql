@@ -1,13 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { AuthenticationError, UserInputError } from 'apollo-server';
+import { combineResolvers } from 'graphql-resolvers';
 
 import db from '../../database/models';
-import JWT from '../../helpers/tokenUtils';
+import JWT from '../../helpers/utils/tokenUtils';
+import auth from './authorization';
 
 module.exports = {
   Mutation: {
     register: async (root, args, context) => {
-      const { username, email, password } = args.input;
+      const {
+        username, email, password, role
+      } = args.input;
 
       const login = username || email;
 
@@ -17,7 +21,12 @@ module.exports = {
         throw new AuthenticationError('user already exists');
       }
 
-      const user = await db.User.create({ username, email, password });
+      const user = await db.User.create({
+        username,
+        email,
+        password,
+        role,
+      });
 
       const token = await JWT.createToken(user, '24h');
 
@@ -42,5 +51,16 @@ module.exports = {
       const token = await JWT.createToken(user, '24h');
       return { ...user.toJSON(), token };
     },
+
+    getAllUsers: combineResolvers(auth.isAdmin, async (root, args, content) => {
+      const res = await db.User.findAll();
+      return res;
+    }),
+
+    // deleteUser: combineResolvers(auth.IsAdmin, async (parent, { userId }) => {
+    //   const res = await db.User.destroy({ where: { userId } });
+
+    //   return res;
+    // }),
   },
 };
