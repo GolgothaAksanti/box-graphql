@@ -5,10 +5,8 @@ import { Op } from 'sequelize';
 
 import auth from './authorization';
 import db from '../../database/models';
-
-const toCursorHash = (string) => Buffer.from(string).toString('base64');
-
-const fromCursorHash = (string) => Buffer.from(string, 'base64').toString('ascii');
+import pubSub, { EVENTS } from '../../subscription';
+import cursorHash from '../../helpers/utils/hashCursor';
 
 module.exports = {
   Mutation: {
@@ -31,12 +29,16 @@ module.exports = {
           throw new AuthenticationError('Already Exist');
         }
 
-        const res = await db.Message.create({
+        const message = await db.Message.create({
           userId: user.userId,
           text,
         });
 
-        return res;
+        pubSub.publish(EVENTS.MESSAGE.CREATED, {
+          messageCreated: { message },
+        });
+
+        return message;
       },
     ),
 
@@ -73,7 +75,7 @@ module.exports = {
         ? {
           where: {
             createdAt: {
-              [Op.lt]: fromCursorHash(cursor),
+              [Op.lt]: cursorHash.fromCursorHash(cursor),
             },
           },
         }
@@ -92,8 +94,8 @@ module.exports = {
         edges,
         pageInfo: {
           hasNextPage,
-          endCursor: toCursorHash(edges[edges.length - 1].createdAt),
-        }
+          endCursor: cursorHash.toCursorHash(edges[edges.length - 1].createdAt),
+        },
       };
 
       return res;
@@ -117,5 +119,11 @@ module.exports = {
         return res;
       },
     ),
+  },
+
+  Subscription: {
+    messageCreated: {
+      subscribe: () => pubSub.asyncIterator(EVENTS.MESSAGE.CREATED),
+    },
   },
 };

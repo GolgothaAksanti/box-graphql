@@ -23,7 +23,7 @@ app.use(
 
 const apiVersion = '/api/v1';
 
-const apolloServer = new ApolloServer({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
@@ -35,12 +35,13 @@ const apolloServer = new ApolloServer({
   },
 });
 
-apolloServer.applyMiddleware({
+server.applyMiddleware({
   app,
   path: apiVersion,
 });
 
-const server = createServer(app);
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
 
 export const onPort = port;
-export default server;
+export default httpServer;

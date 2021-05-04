@@ -1,5 +1,5 @@
-import server, { onPort } from './api';
+import httpServer, { onPort } from './api';
 
-server.listen({ port: onPort }, () => {
+httpServer.listen({ port: onPort }, () => {
   process.stdout.write(`Server ready at: http://localhost:${onPort}/api/v1`);
 });
